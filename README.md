@@ -10,10 +10,31 @@ Guía paso a paso para crear un juego móvil en iOS para uso personal, sin monet
 
 ### ¿Y si no tienes Mac?
 Aunque el juego se basa en SwiftUI/SpriteKit, necesitas macOS con Xcode para compilar y firmar iOS. Opciones viables si solo tienes Windows/Linux:
-- **Mac en la nube**: alquila por horas (MacStadium, MacInCloud, AWS EC2 mac). Elige una imagen con Xcode preinstalado, conéctate por escritorio remoto/VNC y sigue los pasos de esta guía allí.
-- **Repositorio en la nube + Fastlane**: sube el código (GitHub/GitLab), clona en la Mac remota y usa `xcodebuild` o `fastlane gym` para generar la `.ipa`.
-- **Stacks multiplataforma con build en la nube**: si prefieres no usar Xcode directamente, puedes crear el juego en **React Native/Expo** o **Flutter** y usar servicios de build para iOS (Expo EAS Build, Codemagic). Aun así, necesitarás una Mac o un servicio de build en macOS para firmar con tu Apple ID.
-- **Pruebas**: el simulador solo corre en macOS. En Windows/Linux, tu ciclo es editar localmente y compilar/probar desde la Mac en la nube o usando CI que tenga runners macOS.
+
+**Flujo rápido recomendado (Windows → Mac en la nube):**
+1. Abre una cuenta en un proveedor de Mac por horas (MacStadium, MacInCloud, AWS EC2 mac). Elige una imagen con Xcode reciente.
+2. Conéctate por escritorio remoto (VNC/RDP) y abre **Xcode**.
+3. Crea el proyecto con la guía de esta README dentro de la Mac remota.
+4. Sincroniza el código con GitHub/GitLab/Bitbucket (o con OneDrive/Dropbox si prefieres). Desde Windows editas archivos con tu editor y subes cambios; en la Mac remota haces `git pull` y corres el simulador o compilación.
+5. Para generar la `.ipa`: en la Mac remota ejecuta `xcodebuild` o `fastlane gym` tras un `git pull`. Descarga la `.ipa` a Windows si quieres guardarla.
+
+**Flujo alternativo (edición local en Windows):**
+1. Instala **WSL** o usa PowerShell para manejar Git y tu editor (VS Code, JetBrains, etc.).
+2. Crea el proyecto **una sola vez** en la Mac remota para obtener los archivos iniciales de Xcode.
+3. Clona el repo en Windows y edita el código Swift/UI. No podrás abrir el proyecto en Xcode, pero sí tocar `.swift` y assets.
+4. Cada vez que quieras probar, sube los cambios (`git push`) y en la Mac remota ejecuta:
+   - `git pull`
+   - `xcodebuild -scheme <TuEsquema> -destination 'platform=iOS Simulator,name=iPhone 15'` (para el simulador) o `fastlane gym` para una `.ipa`.
+   - Si tienes un iPhone conectado a la Mac remota, selecciona ese dispositivo en Xcode o usa `-destination 'platform=iOS,id=<UDID>'`.
+5. Descarga la `.ipa` o el log de la build a Windows si necesitas revisarlo.
+
+**Stacks multiplataforma con build en la nube:**
+- **React Native/Expo** o **Flutter** permiten programar desde Windows y delegar el build iOS a servicios macOS (Expo EAS Build, Codemagic, App Center). Sigues necesitando certificados de Apple ID gratuita para firmar builds de desarrollo.
+- El simulador iOS sigue siendo exclusivo de macOS; tu ciclo será probar en Android localmente y subir a un runner macOS para la build iOS.
+
+**Pruebas y control de dispositivos:**
+- El simulador solo corre en macOS. Desde Windows, considera automatizar pruebas rápidas con `xcodebuild test` ejecutado en la Mac remota o en un runner macOS.
+- Para probar en tu iPhone, conéctalo a la Mac remota (si el proveedor lo permite) o carga la `.ipa` firmada a servicios como **Diawi** o **Apple Configurator 2** en la Mac para instalarla en el dispositivo.
 
 ## 1. Crea el proyecto base en Xcode
 1) Abre Xcode → **File > New > Project…** → *iOS App*.
