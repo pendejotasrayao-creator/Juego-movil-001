@@ -8,6 +8,13 @@ Guía paso a paso para crear un juego móvil en iOS para uso personal, sin monet
 - Espacio para el **iOS Simulator** y, si puedes, un **iPhone** para probar.
 - Control de versiones con **Git** (opcional pero recomendado).
 
+### ¿Y si no tienes Mac?
+Aunque el juego se basa en SwiftUI/SpriteKit, necesitas macOS con Xcode para compilar y firmar iOS. Opciones viables si solo tienes Windows/Linux:
+- **Mac en la nube**: alquila por horas (MacStadium, MacInCloud, AWS EC2 mac). Elige una imagen con Xcode preinstalado, conéctate por escritorio remoto/VNC y sigue los pasos de esta guía allí.
+- **Repositorio en la nube + Fastlane**: sube el código (GitHub/GitLab), clona en la Mac remota y usa `xcodebuild` o `fastlane gym` para generar la `.ipa`.
+- **Stacks multiplataforma con build en la nube**: si prefieres no usar Xcode directamente, puedes crear el juego en **React Native/Expo** o **Flutter** y usar servicios de build para iOS (Expo EAS Build, Codemagic). Aun así, necesitarás una Mac o un servicio de build en macOS para firmar con tu Apple ID.
+- **Pruebas**: el simulador solo corre en macOS. En Windows/Linux, tu ciclo es editar localmente y compilar/probar desde la Mac en la nube o usando CI que tenga runners macOS.
+
 ## 1. Crea el proyecto base en Xcode
 1) Abre Xcode → **File > New > Project…** → *iOS App*.
 2) Elige **Interface: SwiftUI** y **Language: Swift**. Marca **Include Tests** opcional.
